@@ -55,20 +55,25 @@ function main()
     // also need to update post_max_size and upload_max_filesize if provided UPLOAD_LIMIT
     if (getenv('UPLOAD_LIMIT') !== false)
     {
-        $content = file_get_contents();
+        $filePath = "/etc/php/8.4/apache/php.ini";
+        $content = file_get_contents($filePath);
 
         $replacePairs = [
-            'upload_max_filesize = 2M' => getenv('UPLOAD_LIMIT'),
-            'post_max_size = 8M' => getenv('UPLOAD_LIMIT'),
+            'upload_max_filesize = 2M' => 'upload_max_filesize = ' . getenv('UPLOAD_LIMIT'),
+            'post_max_size = 8M' => 'post_max_size = ' . getenv('UPLOAD_LIMIT'),
         ];
-    }
 
+        $content = str_replace(
+            array_keys($replacePairs),
+            array_values($replacePairs),
+            $content
+        );
+
+        file_put_contents($filePath, $content);
+    }
 
     yaml_emit_file("/config.yaml", $config);
 }
 
-
-
 main();
-
 
