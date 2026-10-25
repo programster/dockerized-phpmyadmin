@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: phpmyadmin
+    image: ${DOCKER_IMAGE_NAME}
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443" # comment out if not using ssl.
+
+    # Comment out volumes if not using SSL
+    volumes:
+      - ./ssl:/ssl:ro
+
+    environment:
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=${DB_ROOT_PASSWORD}
+      #- PMA_ARBITRARY=1
+
+      # Comment this out if you do not want to enable ssl (e.g. you use a reverse proxy)
+      #- SSL_ENABLED=1
+
+  db:
+    image: mariadb:11.6-noble
+    container_name: db
+    restart: no
+#    volumes:
+#      - db-data:/var/lib/mysql
+    ports:
+      - $DB_PORT:3306
+    logging:
+      driver: json-file
+      options:
+        max-size: "10M"
+        max-file: "10"
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_USER_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
