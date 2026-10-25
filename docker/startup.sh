@@ -9,7 +9,7 @@ set -e
 service apache2 stop
 
 # Enable ssl
-if [[ -n $SSL_ENABLED ]]; then
+if [[ "$SSL_ENABLED" == "1" || "$SSL_ENABLED" == "true" ]]; then
   echo "SSL_ENABLED so enabling ssl..."
   a2enmod ssl && a2ensite apache-ssl-config
 else

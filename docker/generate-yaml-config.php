@@ -55,7 +55,7 @@ function main()
     // also need to update post_max_size and upload_max_filesize if provided UPLOAD_LIMIT
     if (getenv('UPLOAD_LIMIT') !== false)
     {
-        $filePath = "/etc/php/8.4/apache/php.ini";
+        $filePath = "/etc/php/8.4/apache2/php.ini";
         $content = file_get_contents($filePath);
 
         $replacePairs = [
